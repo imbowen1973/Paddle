@@ -18,15 +18,13 @@
  * Process expirations task.
  *
  * @package   enrol_paddle
- * @author    Farhan Karmali <farhan6318@gmail.com>
- * @copyright Farhan Karmali
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
- * @package   enrol_paddle
  * @author    Mark Bowen
  * @copyright 2025 Mark Bowen
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+namespace enrol_paddle\task;
+
 class process_expirations extends \core\task\scheduled_task {
 
     /**
