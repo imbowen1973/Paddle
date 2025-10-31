@@ -1,0 +1,59 @@
+define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notification) {
+    var PaddleCheckout = {
+        init: function(args) {
+            var btn = document.getElementById('paddle-checkout');
+            if (!btn) {
+                return;
+            }
+
+            try {
+                if (typeof Paddle !== 'undefined') {
+                    if (typeof Paddle.Environment !== 'undefined') {
+                        if (args.environment === 'sandbox') {
+                            Paddle.Environment.set('sandbox');
+                        }
+                    }
+                }
+            } catch (e) {
+                // Ignore setup errors; they will surface on checkout open.
+                console.error('Paddle setup error:', e);
+            }
+
+            btn.addEventListener('click', function() {
+                if (btn.dataset.loading) {
+                    return;
+                }
+                btn.dataset.loading = '1';
+                btn.setAttribute('disabled', 'disabled');
+
+                Ajax.call([
+                    {
+                        methodname: 'enrol_paddle_get_checkout_id',
+                        args: {
+                            instanceid: args.instanceid
+                        }
+                    }
+                ])[0].then(function(data) {
+                    if (!data || !data.success || !data.checkout_id) {
+                        throw new Error(data && data.error ? data.error : 'Invalid response from Moodle');
+                    }
+                    if (typeof Paddle === 'undefined' || typeof Paddle.Checkout === 'undefined') {
+                        throw new Error('Paddle.js not loaded or initialized correctly.');
+                    }
+                    Paddle.Checkout.open({
+                        checkoutId: data.checkout_id
+                    });
+                }).catch(function(error) {
+                    Notification.exception({
+                        message: args.checkoutcreationfailed + '\n' + error.message,
+                        err: error
+                    });
+                }).finally(function() {
+                    delete btn.dataset.loading;
+                    btn.removeAttribute('disabled');
+                });
+            });
+        }
+    };
+    return PaddleCheckout;
+});

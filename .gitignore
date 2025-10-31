@@ -1,0 +1,49 @@
+# Moodle plugin .gitignore
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-*
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.bak
+*.old
+~*
+
+# Compiled AMD modules (we keep source, Moodle compiles them)
+paddle/amd/build/
+
+# Backup files
+*.zip
+*.tar.gz
+*.backup
+
+# Local config files (never commit credentials)
+config.php
+.env
+
+# Logs
+*.log
+
+# Node modules if using grunt/npm
+node_modules/
+package-lock.json
+
+# Moodle specific
+moodledata/
+phpunit/
+behat/
+nul
+*.nul
+paddle/nul
+ 
+ 

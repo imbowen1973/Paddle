@@ -1,0 +1,12 @@
+<div class="enrol-paddle" style="text-align:center">
+    <p>{{#str}}paymentrequired{{/str}}</p>
+    <p><b>{{instancename}}</b></p>
+    <p><b>{{#str}}cost{{/str}}: {{currency}} {{localisedcost}}</b></p>
+    <p>{{#str}}paymentinstant{{/str}}</p>
+
+    <script src="https://cdn.paddle.com/paddle/paddle.js"></script>
+
+    <button id="paddle-checkout" class="btn btn-primary">
+        {{#str}}sendpaymentbutton, enrol_paddle{{/str}}
+    </button>
+</div>
