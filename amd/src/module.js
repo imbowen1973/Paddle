@@ -43,12 +43,13 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
                     Paddle.Checkout.open({
                         checkoutId: data.checkout_id
                     });
+                    delete btn.dataset.loading;
+                    btn.removeAttribute('disabled');
                 }).catch(function(error) {
                     Notification.exception({
                         message: args.checkoutcreationfailed + '\n' + error.message,
                         err: error
                     });
-                }).finally(function() {
                     delete btn.dataset.loading;
                     btn.removeAttribute('disabled');
                 });
