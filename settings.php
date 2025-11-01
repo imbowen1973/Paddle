@@ -54,6 +54,8 @@ if ($ADMIN->fulltree) {
 
     $settings->add(new admin_setting_configtext('enrol_paddle/webhook_secret', get_string('webhooksecret', 'enrol_paddle'), get_string('webhooksecret_desc', 'enrol_paddle'), '', PARAM_RAW_TRIMMED));
 
+    $settings->add(new admin_setting_configcheckbox('enrol_paddle/debug_mode', get_string('debugmode', 'enrol_paddle'), get_string('debugmode_desc', 'enrol_paddle'), 0));
+
     $settings->add(new admin_setting_configcheckbox('enrol_paddle/mailstudents', get_string('mailstudents', 'enrol_paddle'), '', 0));
     $settings->add(new admin_setting_configcheckbox('enrol_paddle/mailteachers', get_string('mailteachers', 'enrol_paddle'), '', 0));
     $settings->add(new admin_setting_configcheckbox('enrol_paddle/mailadmins', get_string('mailadmins', 'enrol_paddle'), '', 0));

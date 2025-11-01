@@ -532,7 +532,21 @@ class enrol_paddle_plugin extends enrol_plugin {
                 'timeout' => 30,
             ];
 
+            // Debug logging if enabled.
+            if ($plugin->get_config('debug_mode')) {
+                error_log('PADDLE DEBUG: API Request to ' . $checkoutendpoint);
+                error_log('PADDLE DEBUG: Headers: ' . json_encode($headers));
+                error_log('PADDLE DEBUG: Payload: ' . json_encode($payload, JSON_PRETTY_PRINT));
+            }
+
             $responsebody = $curl->post($checkoutendpoint, json_encode($payload), $options);
+
+            // Debug logging if enabled.
+            if ($plugin->get_config('debug_mode')) {
+                error_log('PADDLE DEBUG: HTTP Code: ' . ($curl->get_info()['http_code'] ?? 'unknown'));
+                error_log('PADDLE DEBUG: Response: ' . $responsebody);
+            }
+
             if ($curl->get_errno()) {
                 throw new moodle_exception('apirequestfailed', 'enrol_paddle', '', $curl->error);
             }

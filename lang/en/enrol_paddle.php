@@ -76,6 +76,8 @@ $string['integrationid_desc'] = 'Optional Paddle-Integration-Identifier header v
 $string['priceid'] = 'Paddle Price ID';
 $string['priceid_desc'] = 'The default Paddle Price ID to use for checkouts (e.g., pri_01xxxxx). Create prices in your Paddle dashboard under Catalog → Products. This can be overridden per-course in the enrollment instance settings.';
 $string['priceid_help'] = 'Enter the Paddle Price ID for this course (e.g., pri_01xxxxx). Create different prices in your Paddle dashboard for different course amounts. If left empty, the default Price ID from plugin settings will be used.';
+$string['debugmode'] = 'Debug mode';
+$string['debugmode_desc'] = 'Enable detailed logging of Paddle API requests and responses. Logs will be written to PHP error log. Disable in production.';
 $string['paymentinstant'] = 'You will be enrolled immediately after payment is confirmed.';
 
 // REST checkout / errors.
