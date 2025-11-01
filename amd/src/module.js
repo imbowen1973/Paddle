@@ -39,8 +39,13 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
                         console.group('Paddle Checkout Debug');
                         console.log('Endpoint:', data.debug.endpoint);
                         console.log('HTTP Code:', data.debug.response_code);
-                        console.log('Request Payload:', data.debug.payload);
+                        console.log('Request Payload:', JSON.parse(data.debug.payload));
                         console.log('Response Body:', data.debug.response_body);
+                        try {
+                            console.log('Response JSON:', JSON.parse(data.debug.response_body));
+                        } catch (e) {
+                            // Response wasn't JSON.
+                        }
                         console.groupEnd();
                     }
 

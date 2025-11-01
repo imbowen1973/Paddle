@@ -571,15 +571,15 @@ class enrol_paddle_plugin extends enrol_plugin {
             $response = [
                 'success' => true,
                 'checkout_id' => $checkoutid,
-                'metadata' => $metadata,
+                'metadata' => json_encode($metadata),
             ];
 
             // Add debug info if enabled.
             if ($plugin->get_config('debug_mode')) {
                 $response['debug'] = [
                     'endpoint' => $checkoutendpoint,
-                    'payload' => $payload,
-                    'response_code' => $curl->get_info()['http_code'] ?? 'unknown',
+                    'payload' => json_encode($payload),
+                    'response_code' => (string)($curl->get_info()['http_code'] ?? 'unknown'),
                     'response_body' => $responsebody,
                 ];
             }
@@ -607,10 +607,20 @@ class enrol_paddle_plugin extends enrol_plugin {
     /**
      * Returns result of external function get_checkout_id_external.
      *
-     * @return external_value
+     * @return external_single_structure
      */
-    public static function get_checkout_id_external_returns(): external_value {
-        return new external_value(PARAM_RAW, 'Paddle checkout ID and success status');
+    public static function get_checkout_id_external_returns(): external_single_structure {
+        return new external_single_structure([
+            'success' => new external_value(PARAM_BOOL, 'Whether the request was successful'),
+            'checkout_id' => new external_value(PARAM_TEXT, 'Paddle checkout ID'),
+            'metadata' => new external_value(PARAM_RAW, 'Metadata for the checkout', VALUE_OPTIONAL),
+            'debug' => new external_single_structure([
+                'endpoint' => new external_value(PARAM_URL, 'API endpoint'),
+                'payload' => new external_value(PARAM_RAW, 'Request payload'),
+                'response_code' => new external_value(PARAM_TEXT, 'HTTP response code'),
+                'response_body' => new external_value(PARAM_RAW, 'Response body'),
+            ], 'Debug information', VALUE_OPTIONAL),
+        ]);
     }
 
 }
