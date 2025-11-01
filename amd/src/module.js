@@ -37,18 +37,26 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
                         }
                     }
                 ])[0].then(function(data) {
-                    // Debug logging to console if available.
+                    // ALWAYS log debug info to console
+                    if (data && data.debug && data.debug.console_log) {
+                        console.group('=== PADDLE EXECUTION LOG ===');
+                        console.log(data.debug.console_log);
+                        console.groupEnd();
+                    }
+
+                    // Additional debug logging if available.
                     if (data && data.debug) {
                         console.group('Paddle Checkout Debug');
-                        console.log('Endpoint:', data.debug.endpoint);
-                        console.log('HTTP Code:', data.debug.response_code);
-                        console.log('Request Payload:', JSON.parse(data.debug.payload));
-                        console.log('Response Body:', data.debug.response_body);
-                        try {
-                            console.log('Response JSON:', JSON.parse(data.debug.response_body));
-                        } catch (e) {
-                            // Response wasn't JSON.
+                        if (data.debug.endpoint) console.log('Endpoint:', data.debug.endpoint);
+                        if (data.debug.response_code) console.log('HTTP Code:', data.debug.response_code);
+                        if (data.debug.payload) {
+                            try {
+                                console.log('Request Payload:', JSON.parse(data.debug.payload));
+                            } catch (e) {
+                                console.log('Request Payload:', data.debug.payload);
+                            }
                         }
+                        if (data.debug.response_body) console.log('Response Body:', data.debug.response_body);
                         console.groupEnd();
                     }
 

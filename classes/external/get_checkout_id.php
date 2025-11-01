@@ -58,27 +58,48 @@ class get_checkout_id extends external_api {
      * @throws moodle_exception
      */
     public static function execute(int $instanceid): array {
-        error_log('PADDLE EXECUTE: Function called with instanceid=' . $instanceid);
+        $debuglog = [];
+        $debuglog[] = 'STEP 1: Function called with instanceid=' . $instanceid;
+
         global $DB, $USER, $CFG;
+        $debuglog[] = 'STEP 2: Globals declared';
+
         require_once($CFG->libdir . '/filelib.php');
-        error_log('PADDLE EXECUTE: Globals loaded, USER->id=' . $USER->id);
+        $debuglog[] = 'STEP 3: filelib.php loaded';
+        $debuglog[] = 'STEP 4: USER->id=' . $USER->id;
 
         try {
             $params = self::validate_parameters(self::execute_parameters(), ['instanceid' => $instanceid]);
             $instanceid = $params['instanceid'];
-            error_log('PADDLE EXECUTE: Parameters validated successfully');
+            $debuglog[] = 'STEP 5: Parameters validated successfully';
         } catch (\invalid_parameter_exception $e) {
-            error_log('PADDLE EXECUTE: Parameter validation failed: ' . $e->getMessage());
-            throw new moodle_exception('invalidparameter', 'enrol_paddle');
+            $debuglog[] = 'STEP 5 ERROR: Parameter validation failed: ' . $e->getMessage();
+            // Return debug instead of throwing
+            return [
+                'success' => false,
+                'error' => 'Parameter validation failed',
+                'debug' => [
+                    'console_log' => implode("\n", $debuglog),
+                    'exception' => $e->getMessage()
+                ]
+            ];
         }
 
         $response = ['success' => false];
+        $debuglog[] = 'STEP 6: Starting main try block';
 
         try {
+            $debuglog[] = 'STEP 7: Getting paddle plugin instance';
             $plugin = enrol_get_plugin('paddle');
             if (!$plugin) {
-                throw new moodle_exception('errdisabled', 'enrol_paddle');
+                $debuglog[] = 'STEP 7 ERROR: Plugin not found';
+                return [
+                    'success' => false,
+                    'error' => 'Paddle plugin not enabled',
+                    'debug' => ['console_log' => implode("\n", $debuglog)]
+                ];
             }
+            $debuglog[] = 'STEP 8: Plugin found';
 
             $instance = $DB->get_record('enrol', ['id' => $instanceid, 'enrol' => 'paddle', 'status' => ENROL_INSTANCE_ENABLED], '*', MUST_EXIST);
             $course = $DB->get_record('course', ['id' => $instance->courseid], '*', MUST_EXIST);
@@ -203,20 +224,31 @@ class get_checkout_id extends external_api {
                 'metadata' => json_encode($metadata),
             ];
 
-            // Add debug info if enabled.
-            if ($plugin->get_config('debug_mode')) {
-                $response['debug'] = [
-                    'endpoint' => $checkoutendpoint,
-                    'payload' => json_encode($payload),
-                    'response_code' => (string)($curl->get_info()['http_code'] ?? 'unknown'),
-                    'response_body' => $responsebody,
-                ];
-            }
+            $debuglog[] = 'STEP SUCCESS: Checkout ID obtained: ' . $checkoutid;
+
+            // ALWAYS add debug info to console
+            $response['debug'] = [
+                'console_log' => implode("\n", $debuglog),
+                'endpoint' => $checkoutendpoint,
+                'payload' => json_encode($payload),
+                'response_code' => (string)($curl->get_info()['http_code'] ?? 'unknown'),
+                'response_body' => substr($responsebody, 0, 500),
+            ];
 
         } catch (moodle_exception $ex) {
-            throw $ex;
+            $debuglog[] = 'STEP ERROR (moodle_exception): ' . $ex->getMessage();
+            return [
+                'success' => false,
+                'error' => $ex->getMessage(),
+                'debug' => ['console_log' => implode("\n", $debuglog)]
+            ];
         } catch (\Exception $ex) {
-            throw new moodle_exception('apirequestfailed', 'enrol_paddle', '', $ex->getMessage());
+            $debuglog[] = 'STEP ERROR (Exception): ' . $ex->getMessage();
+            return [
+                'success' => false,
+                'error' => $ex->getMessage(),
+                'debug' => ['console_log' => implode("\n", $debuglog)]
+            ];
         }
 
         return $response;
@@ -230,13 +262,16 @@ class get_checkout_id extends external_api {
     public static function execute_returns(): external_single_structure {
         return new external_single_structure([
             'success' => new external_value(PARAM_BOOL, 'Whether the request was successful'),
-            'checkout_id' => new external_value(PARAM_TEXT, 'Paddle checkout ID'),
+            'checkout_id' => new external_value(PARAM_TEXT, 'Paddle checkout ID', VALUE_OPTIONAL),
             'metadata' => new external_value(PARAM_TEXT, 'Metadata for the checkout', VALUE_OPTIONAL),
+            'error' => new external_value(PARAM_TEXT, 'Error message', VALUE_OPTIONAL),
             'debug' => new external_single_structure([
-                'endpoint' => new external_value(PARAM_TEXT, 'API endpoint'),
-                'payload' => new external_value(PARAM_TEXT, 'Request payload'),
-                'response_code' => new external_value(PARAM_TEXT, 'HTTP response code'),
-                'response_body' => new external_value(PARAM_TEXT, 'Response body'),
+                'console_log' => new external_value(PARAM_RAW, 'Console debug log', VALUE_OPTIONAL),
+                'endpoint' => new external_value(PARAM_TEXT, 'API endpoint', VALUE_OPTIONAL),
+                'payload' => new external_value(PARAM_TEXT, 'Request payload', VALUE_OPTIONAL),
+                'response_code' => new external_value(PARAM_TEXT, 'HTTP response code', VALUE_OPTIONAL),
+                'response_body' => new external_value(PARAM_TEXT, 'Response body', VALUE_OPTIONAL),
+                'exception' => new external_value(PARAM_TEXT, 'Exception message', VALUE_OPTIONAL),
             ], 'Debug information', VALUE_OPTIONAL),
         ]);
     }
