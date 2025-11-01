@@ -227,7 +227,7 @@ class enrol_paddle_plugin extends enrol_plugin {
                     'localisedcost' => $localisedcost,
                 ];
                 $PAGE->requires->js_call_amd('enrol_paddle/module', 'init', [[
-                    'instanceid' => $instance->id,
+                    'instanceid' => (int)$instance->id,
                     'environment' => $this->get_config('environment'),
                     'checkoutcreationfailed' => get_string('checkoutcreationfailed', 'enrol_paddle')
                 ]]);

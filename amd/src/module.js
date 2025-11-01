@@ -33,7 +33,7 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
                     {
                         methodname: 'enrol_paddle_get_checkout_id',
                         args: {
-                            instanceid: args.instanceid
+                            instanceid: parseInt(args.instanceid, 10)
                         }
                     }
                 ])[0].then(function(data) {
