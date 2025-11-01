@@ -26,6 +26,9 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
                 btn.dataset.loading = '1';
                 btn.setAttribute('disabled', 'disabled');
 
+                console.log('Paddle Checkout: Calling AJAX with args:', args);
+                console.log('Paddle Checkout: instanceid =', args.instanceid, '(type:', typeof args.instanceid, ')');
+
                 Ajax.call([
                     {
                         methodname: 'enrol_paddle_get_checkout_id',
