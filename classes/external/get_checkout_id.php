@@ -24,9 +24,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-global $CFG;
-require_once($CFG->libdir . '/filelib.php');
-
 namespace enrol_paddle\external;
 
 use core_external\external_api;
@@ -62,7 +59,8 @@ class get_checkout_id extends external_api {
      */
     public static function execute(int $instanceid): array {
         error_log('PADDLE EXECUTE: Function called with instanceid=' . $instanceid);
-        global $DB, $USER;
+        global $DB, $USER, $CFG;
+        require_once($CFG->libdir . '/filelib.php');
         error_log('PADDLE EXECUTE: Globals loaded, USER->id=' . $USER->id);
 
         try {
