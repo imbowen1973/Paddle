@@ -29,7 +29,8 @@ $functions = array(
         'classname'   => 'enrol_paddle_plugin',
         'methodname'  => 'get_checkout_id_external',
         'description' => 'Get Paddle checkout ID',
-        'capabilities'=> 'moodle/course:view',
-        'type'        => 'read',
+        'type'        => 'write',
+        'ajax'        => true,
+        'loginrequired' => true,
     )
 );
