@@ -65,8 +65,16 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
                     btn.removeAttribute('disabled');
                 }).catch(function(error) {
                     console.error('Paddle checkout error:', error);
+
+                    // Extract user-friendly error message
+                    var userMessage = args.checkoutcreationfailed;
+                    if (error.message) {
+                        // Show the actual error message from Moodle if available
+                        userMessage = error.message;
+                    }
+
                     Notification.exception({
-                        message: args.checkoutcreationfailed + '\n' + error.message,
+                        message: userMessage,
                         err: error
                     });
                     delete btn.dataset.loading;

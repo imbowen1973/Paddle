@@ -81,10 +81,13 @@ $string['debugmode_desc'] = 'Enable detailed logging of Paddle API requests and 
 $string['paymentinstant'] = 'You will be enrolled immediately after payment is confirmed.';
 
 // REST checkout / errors.
-$string['missingapikey'] = 'Paddle API key has not been configured.';
-$string['missingpriceid'] = 'Paddle Price ID has not been configured. Please set a Price ID in the plugin settings or enrollment instance.';
-$string['checkoutcreationfailed'] = 'Unable to create a Paddle checkout session. Please try again or contact support.';
-$string['apirequestfailed'] = 'Paddle API request failed: {$a}';
+$string['missingapikey'] = 'Payment system is not configured. Please contact the site administrator.';
+$string['missingpriceid'] = 'Course pricing is not configured. Please contact the site administrator to set up pricing for this course.';
+$string['checkoutcreationfailed'] = 'Unable to start the payment process. Please refresh the page and try again. If the problem persists, contact support.';
+$string['apirequestfailed'] = 'Payment system error: {$a}. Please try again in a few minutes or contact support if the problem continues.';
+$string['invalidparameter'] = 'Invalid enrollment configuration. Please contact the site administrator to check the enrollment settings for this course.';
+$string['errdisabled'] = 'Paddle enrollment is currently disabled. Please contact the site administrator.';
+$string['nocost'] = 'This course has no price configured. Please contact the site administrator.';
 
 // Privacy metadata.
 $string['privacy:metadata:enrol_paddle:api'] = 'The Paddle enrolment plugin sends user information to the Paddle API to create checkout sessions.';
