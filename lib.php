@@ -574,6 +574,16 @@ class enrol_paddle_plugin extends enrol_plugin {
                 'metadata' => $metadata,
             ];
 
+            // Add debug info if enabled.
+            if ($plugin->get_config('debug_mode')) {
+                $response['debug'] = [
+                    'endpoint' => $checkoutendpoint,
+                    'payload' => $payload,
+                    'response_code' => $curl->get_info()['http_code'] ?? 'unknown',
+                    'response_body' => $responsebody,
+                ];
+            }
+
         } catch (moodle_exception $ex) {
             throw $ex;
         } catch (Exception $ex) {

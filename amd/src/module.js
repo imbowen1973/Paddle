@@ -34,6 +34,16 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
                         }
                     }
                 ])[0].then(function(data) {
+                    // Debug logging to console if available.
+                    if (data && data.debug) {
+                        console.group('Paddle Checkout Debug');
+                        console.log('Endpoint:', data.debug.endpoint);
+                        console.log('HTTP Code:', data.debug.response_code);
+                        console.log('Request Payload:', data.debug.payload);
+                        console.log('Response Body:', data.debug.response_body);
+                        console.groupEnd();
+                    }
+
                     if (!data || !data.success || !data.checkout_id) {
                         throw new Error(data && data.error ? data.error : 'Invalid response from Moodle');
                     }
@@ -46,6 +56,7 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
                     delete btn.dataset.loading;
                     btn.removeAttribute('disabled');
                 }).catch(function(error) {
+                    console.error('Paddle checkout error:', error);
                     Notification.exception({
                         message: args.checkoutcreationfailed + '\n' + error.message,
                         err: error
