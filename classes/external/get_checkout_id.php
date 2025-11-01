@@ -149,7 +149,8 @@ class get_checkout_id extends external_api {
 
             $options = [
                 'CURLOPT_HTTPHEADER' => $headers,
-                'timeout' => 30,
+                'CURLOPT_TIMEOUT' => 10,
+                'CURLOPT_CONNECTTIMEOUT' => 5,
             ];
 
             // Debug logging if enabled.
@@ -160,6 +161,12 @@ class get_checkout_id extends external_api {
             }
 
             $responsebody = $curl->post($checkoutendpoint, json_encode($payload), $options);
+
+            // Debug curl info
+            if ($plugin->get_config('debug_mode')) {
+                $curlinfo = $curl->get_info();
+                error_log('PADDLE DEBUG: cURL info: ' . json_encode($curlinfo));
+            }
 
             // Debug logging if enabled.
             if ($plugin->get_config('debug_mode')) {
