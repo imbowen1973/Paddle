@@ -100,10 +100,14 @@ class get_checkout_id extends external_api {
                 ];
             }
             $debuglog[] = 'STEP 8: Plugin found';
+            $debuglog[] = 'STEP 9: Fetching enrol instance from database';
 
             $instance = $DB->get_record('enrol', ['id' => $instanceid, 'enrol' => 'paddle', 'status' => ENROL_INSTANCE_ENABLED], '*', MUST_EXIST);
+            $debuglog[] = 'STEP 10: Enrol instance found, course ID=' . $instance->courseid;
+
             $course = $DB->get_record('course', ['id' => $instance->courseid], '*', MUST_EXIST);
             $context = context_course::instance($course->id, MUST_EXIST);
+            $debuglog[] = 'STEP 11: Course and context loaded';
 
             // Determine course cost and currency.
             if ((float)$instance->cost <= 0) {
@@ -113,20 +117,35 @@ class get_checkout_id extends external_api {
             }
 
             $cost = format_float($cost, 2, false);
+            $debuglog[] = 'STEP 12: Cost calculated: ' . $cost;
+
             if ($cost <= 0) {
-                throw new moodle_exception('nocost', 'enrol_paddle');
+                $debuglog[] = 'STEP 12 ERROR: Cost is zero';
+                return [
+                    'success' => false,
+                    'error' => 'Course has no price configured',
+                    'debug' => ['console_log' => implode("\n", $debuglog)]
+                ];
             }
 
             $currency = $instance->currency ?: (string)$plugin->get_config('currency', 'USD');
 
             $apikey = trim((string)$plugin->get_config('api_key'));
+            $debuglog[] = 'STEP 13: API key length: ' . strlen($apikey);
+
             if (empty($apikey)) {
-                throw new moodle_exception('missingapikey', 'enrol_paddle');
+                $debuglog[] = 'STEP 13 ERROR: API key is empty';
+                return [
+                    'success' => false,
+                    'error' => 'Payment system not configured',
+                    'debug' => ['console_log' => implode("\n", $debuglog)]
+                ];
             }
 
             $environment = (string)$plugin->get_config('environment', 'live');
             $apiendpoint = $environment === 'sandbox' ? $plugin->get_config('sandbox_api_url') : $plugin->get_config('live_api_url');
             $checkoutendpoint = $apiendpoint.'/checkouts';
+            $debuglog[] = 'STEP 14: Environment=' . $environment . ', endpoint=' . $checkoutendpoint;
 
             $metadata = [
                 'userid' => $USER->id,
@@ -141,8 +160,15 @@ class get_checkout_id extends external_api {
             if (empty($priceid)) {
                 $priceid = trim((string)$plugin->get_config('price_id'));
             }
+            $debuglog[] = 'STEP 15: Price ID: ' . $priceid;
+
             if (empty($priceid)) {
-                throw new moodle_exception('missingpriceid', 'enrol_paddle');
+                $debuglog[] = 'STEP 15 ERROR: Price ID is empty';
+                return [
+                    'success' => false,
+                    'error' => 'Course pricing not configured',
+                    'debug' => ['console_log' => implode("\n", $debuglog)]
+                ];
             }
 
             $payload = [
@@ -159,8 +185,11 @@ class get_checkout_id extends external_api {
                     'cancel_url' => (new moodle_url('/course/view.php', ['id' => $course->id]))->out(false),
                 ],
             ];
+            $debuglog[] = 'STEP 16: Payload created';
 
             $curl = new \curl();
+            $debuglog[] = 'STEP 17: cURL object created';
+
             $headers = [
                 'Content-Type: application/json',
                 'Authorization: Bearer '.$apikey,
@@ -175,6 +204,7 @@ class get_checkout_id extends external_api {
                 'CURLOPT_TIMEOUT' => 10,
                 'CURLOPT_CONNECTTIMEOUT' => 5,
             ];
+            $debuglog[] = 'STEP 18: Headers and options set';
 
             // Debug logging if enabled.
             if ($plugin->get_config('debug_mode')) {
@@ -183,7 +213,9 @@ class get_checkout_id extends external_api {
                 error_log('PADDLE DEBUG: Payload: ' . json_encode($payload, JSON_PRETTY_PRINT));
             }
 
+            $debuglog[] = 'STEP 19: Making POST request to Paddle...';
             $responsebody = $curl->post($checkoutendpoint, json_encode($payload), $options);
+            $debuglog[] = 'STEP 20: POST request completed';
 
             // Debug curl info
             if ($plugin->get_config('debug_mode')) {
