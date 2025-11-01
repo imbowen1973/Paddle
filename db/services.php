@@ -26,8 +26,8 @@ defined('MOODLE_INTERNAL') || die();
 
 $functions = array(
     'enrol_paddle_get_checkout_id' => array(
-        'classname'   => 'enrol_paddle_plugin',
-        'methodname'  => 'get_checkout_id_external',
+        'classname'   => 'enrol_paddle\external\get_checkout_id',
+        'methodname'  => 'execute',
         'description' => 'Get Paddle checkout ID',
         'type'        => 'write',
         'ajax'        => true,
