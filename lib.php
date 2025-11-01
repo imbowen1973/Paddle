@@ -487,23 +487,29 @@ class enrol_paddle_plugin extends enrol_plugin {
             ];
 
             $coursefullname = format_string($course->fullname, true, ['context' => $context]);
+
+            // Get Price ID from instance or global config.
+            $priceid = trim((string)$instance->customtext1);
+            if (empty($priceid)) {
+                $priceid = trim((string)$plugin->get_config('price_id'));
+            }
+            if (empty($priceid)) {
+                throw new moodle_exception('missingpriceid', 'enrol_paddle');
+            }
+
             $payload = [
                 'items' => [[
-                    'name' => $coursefullname,
-                    'price' => [
-                        'amount' => $cost,
-                        'currency_code' => $currency,
-                    ],
+                    'price_id' => $priceid,
                     'quantity' => 1,
                 ]],
                 'customer' => [
                     'email' => $USER->email,
-                    'name' => fullname($USER),
                 ],
-                'metadata' => $metadata,
-                'passthrough' => json_encode($metadata),
-                'success_url' => (new moodle_url('/enrol/paddle/return.php', ['id' => $course->id]))->out(false),
-                'cancel_url' => (new moodle_url('/course/view.php', ['id' => $course->id]))->out(false),
+                'custom_data' => $metadata,
+                'checkout_data' => [
+                    'success_url' => (new moodle_url('/enrol/paddle/return.php', ['id' => $course->id]))->out(false),
+                    'cancel_url' => (new moodle_url('/course/view.php', ['id' => $course->id]))->out(false),
+                ],
             ];
 
             $curl = new curl();

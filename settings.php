@@ -44,6 +44,8 @@ if ($ADMIN->fulltree) {
 
     $settings->add(new admin_setting_configtext('enrol_paddle/integration_id', get_string('integrationid', 'enrol_paddle'), get_string('integrationid_desc', 'enrol_paddle'), '', PARAM_RAW_TRIMMED));
 
+    $settings->add(new admin_setting_configtext('enrol_paddle/price_id', get_string('priceid', 'enrol_paddle'), get_string('priceid_desc', 'enrol_paddle'), '', PARAM_RAW_TRIMMED));
+
     // Paddle Billing API webhook settings.
     $settings->add(new admin_setting_configselect('enrol_paddle/webhook_hmac_algo', get_string('webhookhmac', 'enrol_paddle'), get_string('webhookhmac_desc', 'enrol_paddle'), 'sha256', [
         'sha256' => 'HMAC-SHA256',
