@@ -588,9 +588,14 @@ class enrol_paddle_plugin extends enrol_plugin {
                 ];
             }
 
+            // Log what we're returning for debugging.
+            error_log('PADDLE RETURN VALUE: ' . json_encode($response));
+
         } catch (moodle_exception $ex) {
+            error_log('PADDLE EXCEPTION: ' . $ex->getMessage());
             throw $ex;
         } catch (Exception $ex) {
+            error_log('PADDLE GENERIC EXCEPTION: ' . $ex->getMessage());
             throw new moodle_exception('apirequestfailed', 'enrol_paddle', '', $ex->getMessage());
         }
 
