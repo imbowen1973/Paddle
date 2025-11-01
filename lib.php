@@ -449,10 +449,8 @@ class enrol_paddle_plugin extends enrol_plugin {
     public static function get_checkout_id_external(int $instanceid): array {
         global $DB, $USER;
 
-        $args = new external_function_parameters([
-            'instanceid' => new external_value(PARAM_INT, 'Enrolment instance ID'),
-        ]);
-        self::validate_parameters($args, ['instanceid' => $instanceid]);
+        $params = self::validate_parameters(self::get_checkout_id_external_parameters(), ['instanceid' => $instanceid]);
+        $instanceid = $params['instanceid'];
 
         $response = ['success' => false];
 
