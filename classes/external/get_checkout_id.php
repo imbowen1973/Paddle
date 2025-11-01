@@ -29,7 +29,6 @@ use core_external\external_function_parameters;
 use core_external\external_value;
 use core_external\external_single_structure;
 use context_course;
-use curl;
 use moodle_url;
 use moodle_exception;
 
@@ -133,7 +132,7 @@ class get_checkout_id extends external_api {
                 ],
             ];
 
-            $curl = new curl();
+            $curl = new \curl();
             $headers = [
                 'Content-Type: application/json',
                 'Authorization: Bearer '.$apikey,
