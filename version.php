@@ -25,6 +25,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2025103100;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version   = 2025103102;        // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2024100100;        // Requires this Moodle version.
 $plugin->component = 'enrol_paddle';    // Full name of the plugin (used for diagnostics)
