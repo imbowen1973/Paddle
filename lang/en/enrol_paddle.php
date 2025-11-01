@@ -73,8 +73,9 @@ $string['apikey'] = 'Paddle API key';
 $string['apikey_desc'] = 'Server-side API key used to create checkout sessions via the Paddle REST API.';
 $string['integrationid'] = 'Integration identifier';
 $string['integrationid_desc'] = 'Optional Paddle-Integration-Identifier header value (helps Paddle identify your integration).';
-$string['priceid'] = 'Default Paddle Price ID';
-$string['priceid_desc'] = 'The Paddle Price ID to use for checkouts (e.g., pri_01xxxxx). Create prices in your Paddle dashboard under Catalog → Products. You can override this per-course in the enrollment instance settings.';
+$string['priceid'] = 'Paddle Price ID';
+$string['priceid_desc'] = 'The default Paddle Price ID to use for checkouts (e.g., pri_01xxxxx). Create prices in your Paddle dashboard under Catalog → Products. This can be overridden per-course in the enrollment instance settings.';
+$string['priceid_help'] = 'Enter the Paddle Price ID for this course (e.g., pri_01xxxxx). Create different prices in your Paddle dashboard for different course amounts. If left empty, the default Price ID from plugin settings will be used.';
 $string['paymentinstant'] = 'You will be enrolled immediately after payment is confirmed.';
 
 // REST checkout / errors.

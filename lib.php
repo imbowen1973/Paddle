@@ -331,6 +331,11 @@ class enrol_paddle_plugin extends enrol_plugin {
         $mform->addElement('select', 'currency', get_string('currency', 'enrol_paddle'), $paddlecurrencies);
         $mform->setDefault('currency', $this->get_config('currency'));
 
+        $mform->addElement('text', 'customtext1', get_string('priceid', 'enrol_paddle'), array('size' => 30));
+        $mform->setType('customtext1', PARAM_RAW_TRIMMED);
+        $mform->addHelpButton('customtext1', 'priceid', 'enrol_paddle');
+        $mform->setDefault('customtext1', '');
+
         $roles = $this->get_roleid_options($instance, $context);
         $mform->addElement('select', 'roleid', get_string('assignrole', 'enrol_paddle'), $roles);
         $mform->setDefault('roleid', $this->get_config('roleid'));
