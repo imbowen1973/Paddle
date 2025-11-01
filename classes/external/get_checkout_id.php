@@ -61,12 +61,16 @@ class get_checkout_id extends external_api {
      * @throws moodle_exception
      */
     public static function execute(int $instanceid): array {
+        error_log('PADDLE EXECUTE: Function called with instanceid=' . $instanceid);
         global $DB, $USER;
+        error_log('PADDLE EXECUTE: Globals loaded, USER->id=' . $USER->id);
 
         try {
             $params = self::validate_parameters(self::execute_parameters(), ['instanceid' => $instanceid]);
             $instanceid = $params['instanceid'];
+            error_log('PADDLE EXECUTE: Parameters validated successfully');
         } catch (\invalid_parameter_exception $e) {
+            error_log('PADDLE EXECUTE: Parameter validation failed: ' . $e->getMessage());
             throw new moodle_exception('invalidparameter', 'enrol_paddle');
         }
 
