@@ -619,10 +619,10 @@ class enrol_paddle_plugin extends enrol_plugin {
             'checkout_id' => new external_value(PARAM_TEXT, 'Paddle checkout ID'),
             'metadata' => new external_value(PARAM_RAW, 'Metadata for the checkout', VALUE_OPTIONAL),
             'debug' => new external_single_structure([
-                'endpoint' => new external_value(PARAM_URL, 'API endpoint'),
-                'payload' => new external_value(PARAM_RAW, 'Request payload'),
+                'endpoint' => new external_value(PARAM_TEXT, 'API endpoint'),
+                'payload' => new external_value(PARAM_TEXT, 'Request payload'),
                 'response_code' => new external_value(PARAM_TEXT, 'HTTP response code'),
-                'response_body' => new external_value(PARAM_RAW, 'Response body'),
+                'response_body' => new external_value(PARAM_TEXT, 'Response body'),
             ], 'Debug information', VALUE_OPTIONAL),
         ]);
     }
