@@ -26,6 +26,10 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_external\external_function_parameters;
+use core_external\external_value;
+use core_external\external_single_structure;
+
 /**
  * Paddle enrolment plugin implementation.
  * @author  Eugene Venter - based on code by Martin Dougiamas and others
