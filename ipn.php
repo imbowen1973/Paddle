@@ -92,6 +92,24 @@ $eventname = '';
 
 // Paddle Billing API format.
 $eventname = (string)($payload->event_type ?? $payload->event ?? '');
+
+// Ignore non-transaction events (setup events like product.created, api_key.created)
+$transaction_events = [
+    'transaction.completed',
+    'transaction.paid',
+    'transaction.payment_failed',
+    'checkout.completed',
+    'order.completed',
+    'subscription.created',
+    'subscription.updated'
+];
+
+if (!in_array($eventname, $transaction_events)) {
+    // Not a transaction event - acknowledge but don't process
+    http_response_code(200);
+    die('Event acknowledged but not processed: ' . $eventname);
+}
+
 $data = $payload->data ?? (object)[];
 $meta = $data->custom_data ?? $data->metadata ?? (object)[];
 $userid = (int)($meta->userid ?? 0);
