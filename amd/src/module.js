@@ -73,6 +73,14 @@ define(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notificat
                     btn.removeAttribute('disabled');
                 }).catch(function(error) {
                     console.error('Paddle checkout error:', error);
+                    console.error('Full error object:', JSON.stringify(error, null, 2));
+                    console.error('Error keys:', Object.keys(error));
+
+                    // Log everything we can find
+                    if (error.exception) console.error('Exception:', error.exception);
+                    if (error.errorcode) console.error('Error code:', error.errorcode);
+                    if (error.debuginfo) console.error('Debug info:', error.debuginfo);
+                    if (error.backtrace) console.error('Backtrace:', error.backtrace);
 
                     // Extract user-friendly error message
                     var userMessage = args.checkoutcreationfailed;
