@@ -66,14 +66,14 @@ class get_checkout_id extends external_api {
 
         require_once($CFG->libdir . '/filelib.php');
         $debuglog[] = 'STEP 3: filelib.php loaded';
-        $debuglog[] = 'STEP 4: USER->id=' . $USER->id;
 
         try {
             $params = self::validate_parameters(self::execute_parameters(), ['instanceid' => $instanceid]);
             $instanceid = $params['instanceid'];
-            $debuglog[] = 'STEP 5: Parameters validated successfully';
+            $debuglog[] = 'STEP 4: Parameters validated successfully';
+            $debuglog[] = 'STEP 5: USER->id=' . ($USER ? $USER->id : 'null');
         } catch (\invalid_parameter_exception $e) {
-            $debuglog[] = 'STEP 5 ERROR: Parameter validation failed: ' . $e->getMessage();
+            $debuglog[] = 'STEP 4 ERROR: Parameter validation failed: ' . $e->getMessage();
             // Return debug instead of throwing
             return [
                 'success' => false,
