@@ -34,9 +34,9 @@ if ($func) {
 echo "<h2>Plugin Version</h2>";
 $version = $DB->get_field('config_plugins', 'value', ['plugin' => 'enrol_paddle', 'name' => 'version']);
 echo "<p>Database version: " . ($version ? $version : 'NOT FOUND') . "</p>";
-echo "<p>Expected: 2025110137</p>";
+echo "<p>Expected: 2025110140</p>";
 
-if ($version != 2025110137) {
+if ($version != 2025110140) {
     echo "<p style='color:orange'><strong>⚠ Version mismatch!</strong></p>";
     echo "<p>You need to visit <a href='" . $CFG->wwwroot . "/admin/index.php'>admin/index.php</a> to upgrade</p>";
 }
