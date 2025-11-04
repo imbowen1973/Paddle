@@ -77,10 +77,14 @@ class get_checkout_id extends external_api {
             // Return debug instead of throwing
             return [
                 'success' => false,
+                'checkout_id' => '',
                 'error' => 'Parameter validation failed',
                 'debug' => [
-                    'console_log' => implode("\n", $debuglog),
-                    'exception' => $e->getMessage()
+                    'console_log' => implode("\n", $debuglog) . "\n" . $e->getMessage(),
+                    'endpoint' => '',
+                    'payload' => '',
+                    'response_code' => '',
+                    'response_body' => ''
                 ]
             ];
         }
@@ -95,8 +99,15 @@ class get_checkout_id extends external_api {
                 $debuglog[] = 'STEP 7 ERROR: Plugin not found';
                 return [
                     'success' => false,
+                    'checkout_id' => '',
                     'error' => 'Paddle plugin not enabled',
-                    'debug' => ['console_log' => implode("\n", $debuglog)]
+                    'debug' => [
+                        'console_log' => implode("\n", $debuglog),
+                        'endpoint' => '',
+                        'payload' => '',
+                        'response_code' => '',
+                        'response_body' => ''
+                    ]
                 ];
             }
             $debuglog[] = 'STEP 8: Plugin found';
@@ -123,8 +134,15 @@ class get_checkout_id extends external_api {
                 $debuglog[] = 'STEP 12 ERROR: Cost is zero';
                 return [
                     'success' => false,
+                    'checkout_id' => '',
                     'error' => 'Course has no price configured',
-                    'debug' => ['console_log' => implode("\n", $debuglog)]
+                    'debug' => [
+                        'console_log' => implode("\n", $debuglog),
+                        'endpoint' => '',
+                        'payload' => '',
+                        'response_code' => '',
+                        'response_body' => ''
+                    ]
                 ];
             }
 
@@ -137,8 +155,15 @@ class get_checkout_id extends external_api {
                 $debuglog[] = 'STEP 13 ERROR: API key is empty';
                 return [
                     'success' => false,
+                    'checkout_id' => '',
                     'error' => 'Payment system not configured',
-                    'debug' => ['console_log' => implode("\n", $debuglog)]
+                    'debug' => [
+                        'console_log' => implode("\n", $debuglog),
+                        'endpoint' => '',
+                        'payload' => '',
+                        'response_code' => '',
+                        'response_body' => ''
+                    ]
                 ];
             }
 
@@ -166,8 +191,15 @@ class get_checkout_id extends external_api {
                 $debuglog[] = 'STEP 15 ERROR: Price ID is empty';
                 return [
                     'success' => false,
+                    'checkout_id' => '',
                     'error' => 'Course pricing not configured',
-                    'debug' => ['console_log' => implode("\n", $debuglog)]
+                    'debug' => [
+                        'console_log' => implode("\n", $debuglog),
+                        'endpoint' => '',
+                        'payload' => '',
+                        'response_code' => '',
+                        'response_body' => ''
+                    ]
                 ];
             }
 
@@ -271,15 +303,29 @@ class get_checkout_id extends external_api {
             $debuglog[] = 'STEP ERROR (moodle_exception): ' . $ex->getMessage();
             return [
                 'success' => false,
+                'checkout_id' => '',
                 'error' => $ex->getMessage(),
-                'debug' => ['console_log' => implode("\n", $debuglog)]
+                'debug' => [
+                    'console_log' => implode("\n", $debuglog),
+                    'endpoint' => '',
+                    'payload' => '',
+                    'response_code' => '',
+                    'response_body' => ''
+                ]
             ];
         } catch (\Exception $ex) {
             $debuglog[] = 'STEP ERROR (Exception): ' . $ex->getMessage();
             return [
                 'success' => false,
+                'checkout_id' => '',
                 'error' => $ex->getMessage(),
-                'debug' => ['console_log' => implode("\n", $debuglog)]
+                'debug' => [
+                    'console_log' => implode("\n", $debuglog),
+                    'endpoint' => '',
+                    'payload' => '',
+                    'response_code' => '',
+                    'response_body' => ''
+                ]
             ];
         }
 
@@ -294,17 +340,16 @@ class get_checkout_id extends external_api {
     public static function execute_returns(): external_single_structure {
         return new external_single_structure([
             'success' => new external_value(PARAM_BOOL, 'Whether the request was successful'),
-            'checkout_id' => new external_value(PARAM_TEXT, 'Paddle checkout ID', VALUE_OPTIONAL),
+            'checkout_id' => new external_value(PARAM_TEXT, 'Paddle checkout ID'),
             'metadata' => new external_value(PARAM_TEXT, 'Metadata for the checkout', VALUE_OPTIONAL),
             'error' => new external_value(PARAM_TEXT, 'Error message', VALUE_OPTIONAL),
             'debug' => new external_single_structure([
-                'console_log' => new external_value(PARAM_RAW, 'Console debug log', VALUE_OPTIONAL),
-                'endpoint' => new external_value(PARAM_TEXT, 'API endpoint', VALUE_OPTIONAL),
-                'payload' => new external_value(PARAM_TEXT, 'Request payload', VALUE_OPTIONAL),
-                'response_code' => new external_value(PARAM_TEXT, 'HTTP response code', VALUE_OPTIONAL),
-                'response_body' => new external_value(PARAM_TEXT, 'Response body', VALUE_OPTIONAL),
-                'exception' => new external_value(PARAM_TEXT, 'Exception message', VALUE_OPTIONAL),
-            ], 'Debug information', VALUE_OPTIONAL),
+                'console_log' => new external_value(PARAM_RAW, 'Console debug log'),
+                'endpoint' => new external_value(PARAM_TEXT, 'API endpoint'),
+                'payload' => new external_value(PARAM_TEXT, 'Request payload'),
+                'response_code' => new external_value(PARAM_TEXT, 'HTTP response code'),
+                'response_body' => new external_value(PARAM_TEXT, 'Response body'),
+            ], 'Debug information'),
         ]);
     }
 }
